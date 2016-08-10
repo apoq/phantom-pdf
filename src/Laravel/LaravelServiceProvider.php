@@ -9,9 +9,7 @@ class LaravelServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        $this->publishes([
-            __DIR__.'/../config/config.php' => config_path('phantom-pdf.php')
-        ]);
+        $this->app->configure('phantom-pdf');
     }
 
     /**
@@ -21,8 +19,6 @@ class LaravelServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'phantom-pdf');
-
         $this->app->singleton('phantom-pdf', function () {
             $generator = new PdfGenerator;
 
