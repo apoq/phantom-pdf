@@ -107,7 +107,8 @@ class PdfGenerator
         }
 
         if (! is_dir($this->storagePath) || ! is_writable($this->storagePath)) {
-            throw new Exception('The specified storage path is not writable');
+            if(!mkdir($this->storagePath))
+                throw new Exception('The specified storage path is not writable: ' . $this->storagePath);
         }
     }
 
@@ -117,14 +118,20 @@ class PdfGenerator
      */
     protected function generatePdf($view)
     {
-        $view = $this->viewToString($view);
-        $this->saveHtml($view);
+        $input = $view;
+
+        if (mb_substr($view, 0, 4) != 'http') {
+            $view = file_get_contents($view);
+            $view = $this->viewToString($view);
+            $this->saveHtml($view);
+            $input = $this->prefixHtmlPath($this->htmlPath);
+        }
 
         $command = implode(' ', [
             $this->getBinaryPath(),
             implode(' ', $this->commandLineOptions),
             $this->convertScript,
-            $this->prefixHtmlPath($this->htmlPath),
+            $input,
             $this->pdfPath
         ]);
 
