@@ -125,6 +125,9 @@ class PdfGenerator
             $view = $this->viewToString($view);
             $this->saveHtml($view);
             $input = $this->prefixHtmlPath($this->htmlPath);
+        } else {
+            $this->addCommandLineOption('--ssl-protocol=any');
+            $this->addCommandLineOption('--ignore-ssl-errors=true');
         }
 
         $command = implode(' ', [
