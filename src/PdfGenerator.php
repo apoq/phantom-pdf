@@ -70,12 +70,16 @@ class PdfGenerator
      * @param string|object $view
      * @param string $path
      */
-    public function saveFromView($view, $path)
+    public function saveFromView($view, $path, $removeTemporary = true)
     {
         $this->generateFilePaths();
         $this->generatePdf($view);
 
         rename($this->pdfPath, $path);
+
+        if ($removeTemporary) {
+            $this->deleteTempFiles();
+        }
     }
 
     /**
